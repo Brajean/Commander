@@ -47,9 +47,21 @@ namespace Commander.Controllers
         {
             var commandItem = _mapper.Map<Command>(commandCreateDTO);
             _repository.CreateCommand(commandItem);
+<<<<<<< HEAD
             _repository.SaveChanges();
             var commandReadDTO = _mapper.Map<CommandReadDTO>(commandItem);
             return CreatedAtRoute(nameof(GetCommandById), new { Id = commandReadDTO.Id }, commandReadDTO);
         }
+=======
+
+            if (_repository.SaveChanges())
+            {
+                var commandReadDTO = _mapper.Map<CommandReadDTO>(commandItem);
+                return CreatedAtRoute(nameof(GetCommandById), new { Id = commandReadDTO.Id }, commandReadDTO);
+            }
+            return BadRequest();
+        }
+
+>>>>>>> 6c3102a43a73965e33000e74848a4b319833fa99
     }
 }
