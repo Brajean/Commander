@@ -25,18 +25,18 @@ namespace Commander.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<CommandReadDTO>> GetAllCommands()
         {
-            var commandItems = _repository.GetAllCommands();
-            return Ok(_mapper.Map<IEnumerable<CommandReadDTO>>(commandItems));
+            var commands = _repository.GetAllCommands();
+            return Ok(_mapper.Map<IEnumerable<CommandReadDTO>>(commands));
         }
 
         //GET api/commands/{id}
         [HttpGet("{id}", Name = "GetCommandById")]
         public ActionResult<CommandReadDTO> GetCommandById(int id)
         {
-            var commandItem = _repository.GetCommandById(id);
-            if (commandItem != null)
+            var command = _repository.GetCommandById(id);
+            if (command != null)
             {
-                return Ok(_mapper.Map<CommandReadDTO>(commandItem));
+                return Ok(_mapper.Map<CommandReadDTO>(command));
             }
             return NotFound();
         }
@@ -45,11 +45,27 @@ namespace Commander.Controllers
         [HttpPost]
         public ActionResult<CommandReadDTO> CreateCommand(CommandCreateDTO commandCreateDTO)
         {
-            var commandItem = _mapper.Map<Command>(commandCreateDTO);
-            _repository.CreateCommand(commandItem);
+            var command = _mapper.Map<Command>(commandCreateDTO);
+            _repository.CreateCommand(command);
             _repository.SaveChanges();
-            var commandReadDTO = _mapper.Map<CommandReadDTO>(commandItem);
+            var commandReadDTO = _mapper.Map<CommandReadDTO>(command);
             return CreatedAtRoute(nameof(GetCommandById), new { Id = commandReadDTO.Id }, commandReadDTO);
+        }
+
+        //PUT api/commands/{id}
+        [HttpPut("{id}")]
+        public ActionResult UpdateCommand(int id, CommandUpdateDTO commandUpdateDTO)
+        {
+            var command = _repository.GetCommandById(id);
+            if (command == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(commandUpdateDTO, command);
+            _repository.UpdateCommand(command); // This is not neccesary, because of Mapping compare changes and has the "command" variable ready.
+            _repository.SaveChanges();
+            return NoContent();
         }
     }
 }
