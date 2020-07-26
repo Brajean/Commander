@@ -21,5 +21,15 @@ namespace Commander.Data
         {
             return new Command { Id = 0, HowTo = "Boil and egg", Line = "Boil water", Platform = "Kettle & Pan" };
         }
+
+        public void CreateCommand(Command command)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool SaveChanges()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
