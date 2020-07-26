@@ -21,7 +21,7 @@ namespace Commander.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Command>> GetAllCommands()
         {
-            var commandItems = _repository.GetAppCommands();
+            var commandItems = _repository.GetAllCommands();
             return Ok(commandItems);
         }
 
@@ -29,7 +29,7 @@ namespace Commander.Controllers
         [HttpGet("{id}")]
         public ActionResult<Command> GetCommandById(int id)
         {
-            var commandItem = _repository.GetAppCommandById(id);
+            var commandItem = _repository.GetCommandById(id);
             return Ok(commandItem);
         }
     }
