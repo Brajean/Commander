@@ -4,6 +4,7 @@ using Commander.Models;
 using Commander.Data;
 using Commander.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Commander.Controllers
 {
@@ -63,7 +64,30 @@ namespace Commander.Controllers
             }
 
             _mapper.Map(commandUpdateDTO, command);
-            _repository.UpdateCommand(command); // This is not neccesary, because of Mapping compare changes and has the "command" variable ready.
+            _repository.UpdateCommand(command); // This is not neccesary, because of _mapper.Map is tracking the changes in the "command" variable.
+            _repository.SaveChanges();
+            return NoContent();
+        }
+
+        //PATCH api/commads/{id}
+        [HttpPatch("{id}")]
+        public ActionResult PartialCommandUpdate(int id, JsonPatchDocument<CommandUpdateDTO> patchDocument)
+        {
+            var command = _repository.GetCommandById(id);
+            if (command == null)
+            {
+                return NotFound();
+            }
+
+            var commandToPatch = _mapper.Map<CommandUpdateDTO>(command);
+            patchDocument.ApplyTo(commandToPatch, ModelState);
+            if (!TryValidateModel(commandToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(commandToPatch, command);
+            _repository.UpdateCommand(command);
             _repository.SaveChanges();
             return NoContent();
         }
