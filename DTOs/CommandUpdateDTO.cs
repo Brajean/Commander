@@ -1,11 +1,9 @@
-using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
 namespace Commander.DTOs
 {
     public class CommandUpdateDTO
     {
-        [JsonPropertyName("how_to")]
         [Required]
         [MaxLength(250)]
         public string HowTo { get; set; }
