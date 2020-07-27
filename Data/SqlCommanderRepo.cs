@@ -24,13 +24,17 @@ namespace Commander.Data
             return _context.Commands.FirstOrDefault(x => x.Id == id);
         }
 
+        public bool SaveChanges()
+        {
+            return _context.SaveChanges() >= 0;
+        }
+
         public void CreateCommand(Command command)
         {
             if (command == null)
             {
                 throw new ArgumentNullException(nameof(command));
             }
-
             _context.Commands.Add(command);
         }
 
@@ -39,9 +43,13 @@ namespace Commander.Data
             // Nothing
         }
 
-        public bool SaveChanges()
+        public void DeleteCommand(Command command)
         {
-            return _context.SaveChanges() >= 0;
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+            _context.Commands.Remove(command);
         }
 
     }
